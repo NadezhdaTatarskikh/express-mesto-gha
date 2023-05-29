@@ -14,14 +14,18 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   userModel
     .create({ name, about, avatar })
-    .then((user) => res.status(STATUS_CODES.CREATED_STATUS).send({ data: user }))
+    .then((user) => {
+      res.status(STATUS_CODES.CREATED_STATUS).send({ data: user });
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(STATUS_CODES.BAD_REQUEST).send({
           message: 'Неверный запрос при создании пользователя',
         });
       } else {
-        res.status(STATUS_CODES.SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res
+          .status(STATUS_CODES.SERVER_ERROR)
+          .send({ message: 'Внутренняя ошибка сервера' });
       }
     });
 };
@@ -35,14 +39,20 @@ module.exports.getUserById = (req, res) => {
       if (user) {
         res.status(STATUS_CODES.OK_STATUS).send({ data: user });
       } else {
-        res.status(STATUS_CODES.NOT_FOUND).send({ message: 'Пользователь пс таким _id не найден' });
+        res
+          .status(STATUS_CODES.NOT_FOUND)
+          .send({ message: 'Пользователь пс таким _id не найден' });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Неверный запрос поиска' });
+        res
+          .status(STATUS_CODES.BAD_REQUEST)
+          .send({ message: 'Неверный запрос поиска' });
       } else {
-        res.status(STATUS_CODES.SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res
+          .status(STATUS_CODES.SERVER_ERROR)
+          .send({ message: 'Внутренняя ошибка сервера' });
       }
     });
 };
@@ -57,7 +67,9 @@ module.exports.updateUserProfile = (req, res) => {
       if (user) {
         res.status(STATUS_CODES.OK_STATUS).send(user);
       } else {
-        res.status(STATUS_CODES.NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res
+          .status(STATUS_CODES.NOT_FOUND)
+          .send({ message: 'Пользователь не найден' });
       }
     })
     .catch((err) => {
@@ -66,7 +78,9 @@ module.exports.updateUserProfile = (req, res) => {
           message: 'Неверный запрос при обновлении профиля',
         });
       } else {
-        res.status(STATUS_CODES.SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res
+          .status(STATUS_CODES.SERVER_ERROR)
+          .send({ message: 'Внутренняя ошибка сервера' });
       }
     });
 };
@@ -81,7 +95,9 @@ module.exports.updateUserAvatar = (req, res) => {
       if (user) {
         res.status(STATUS_CODES.OK_STATUS).send(user);
       } else {
-        res.status(STATUS_CODES.NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res
+          .status(STATUS_CODES.NOT_FOUND)
+          .send({ message: 'Пользователь не найден' });
       }
     })
     .catch((err) => {
@@ -90,7 +106,9 @@ module.exports.updateUserAvatar = (req, res) => {
           message: 'Неверный запрос при обновлении аватара',
         });
       } else {
-        res.status(STATUS_CODES.SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res
+          .status(STATUS_CODES.SERVER_ERROR)
+          .send({ message: 'Внутренняя ошибка сервера' });
       }
     });
 };
