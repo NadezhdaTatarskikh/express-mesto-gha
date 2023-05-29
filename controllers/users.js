@@ -30,6 +30,7 @@ module.exports.createUser = (req, res) => {
 module.exports.getUserById = (req, res) => {
   userModel
     .findById(req.params.userId)
+    .orFail()
     .then((user) => {
       if (user) {
         res.status(STATUS_CODES.OK_STATUS).send({ data: user });
