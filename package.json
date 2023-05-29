@@ -12,7 +12,7 @@
   },
   "author": "Nadezhda Tatarskikh",
   "license": "ISC",
-  "homepage": "",
+  "homepage": "https://github.com/NadezhdaTatarskikh/express-mesto-gha#readme",
   "devDependencies": {
     "eslint": "^8.41.0",
     "eslint-config-airbnb-base": "^15.0.0",
