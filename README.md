@@ -29,6 +29,8 @@ Back-end для проекта Mesto.
   
 Остальные директории вспомогательные, создаются при необходимости разработчиком
 
+## Ссылка на проект: (https://github.com/NadezhdaTatarskikh/express-mesto-gha.git)
+
 ## Запуск проекта
 
 `npm run start` — запускает сервер   
