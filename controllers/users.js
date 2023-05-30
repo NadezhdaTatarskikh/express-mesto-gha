@@ -62,6 +62,8 @@ module.exports.updateProfile = (req, res) => {
       }
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.log(err);
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE.BAD_REQUEST).send({
           message: 'Неверный запрос при обновлении профиля',
