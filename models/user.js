@@ -6,14 +6,14 @@ const userSchema = new mongoose.Schema({
     default: 'Жак-Ив Кусто',
     minlength: 2,
     maxlength: 30,
-    require: true,
+    required: true,
   },
   about: {
     type: String,
     default: 'Исследователь',
     minlength: 2,
     maxlength: 30,
-    require: true,
+    required: true,
   },
   avatar: {
     type: String,
