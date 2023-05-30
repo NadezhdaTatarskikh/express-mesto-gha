@@ -31,10 +31,15 @@ module.exports.createUser = (req, res) => {
 // Получаем пользователя по id
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .orFail(() => {
-      throw new Error('Пользователь по указанному _id не найден');
+    .then((user) => {
+      if (user) {
+        res.status(ERROR_CODE.OK).send({ data: user });
+      } else {
+        res.status(ERROR_CODE.NOT_FOUND).send({
+          message: 'Внутренняя ошибка сервера',
+        });
+      }
     })
-    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res
