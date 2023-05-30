@@ -34,16 +34,10 @@ module.exports.createUser = (req, res) => {
 module.exports.getUserById = (req, res) => {
   userModel
     .findById(req.params.userId)
-    .orFail()
-    .then((user) => {
-      if (user) {
-        res.status(STATUS_CODES.OK).send({ data: user });
-      } else {
-        res
-          .status(STATUS_CODES.NOT_FOUND)
-          .send({ message: 'Пользователь пс таким _id не найден' });
-      }
+    .orFail(() => {
+      throw new Error('Пользователь по указанному _id не найден');
     })
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res

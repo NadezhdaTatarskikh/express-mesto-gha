@@ -4,8 +4,7 @@ const { STATUS_CODES } = require('../utils/errors');
 // Получаем все карточки
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send({ cards }))
     .catch(next);
 };
 
@@ -17,7 +16,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user._id;
   return Card.create({ name, link, owner })
     .then((card) => {
-      res.status(STATUS_CODES.CREATED).send({ data: card });
+      res.status(STATUS_CODES.CREATED).send({ card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
