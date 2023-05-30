@@ -15,7 +15,7 @@ module.exports.createUser = (req, res) => {
   userModel
     .create({ name, about, avatar })
     .then((user) => {
-      res.status(STATUS_CODES.CREATED_STATUS).send({ data: user });
+      res.status(STATUS_CODES.CREATED).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -37,7 +37,7 @@ module.exports.getUserById = (req, res) => {
     .orFail()
     .then((user) => {
       if (user) {
-        res.status(STATUS_CODES.OK_STATUS).send({ data: user });
+        res.status(STATUS_CODES.OK).send({ data: user });
       } else {
         res
           .status(STATUS_CODES.NOT_FOUND)
@@ -65,7 +65,7 @@ module.exports.updateUserProfile = (req, res) => {
     .findByIdAndUpdate(req.user._id, { name, about }, { new: true })
     .then((user) => {
       if (user) {
-        res.status(STATUS_CODES.OK_STATUS).send(user);
+        res.status(STATUS_CODES.OK).send(user);
       } else {
         res
           .status(STATUS_CODES.NOT_FOUND)
@@ -93,7 +93,7 @@ module.exports.updateUserAvatar = (req, res) => {
     .findByIdAndUpdate(req.user._id, { avatar }, { new: true })
     .then((user) => {
       if (user) {
-        res.status(STATUS_CODES.OK_STATUS).send(user);
+        res.status(STATUS_CODES.OK).send(user);
       } else {
         res
           .status(STATUS_CODES.NOT_FOUND)
