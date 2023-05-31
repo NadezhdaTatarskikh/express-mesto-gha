@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
-const CardRouter = require('./routes/cards');
+const cardRouter = require('./routes/cards');
 const { ERROR_CODE } = require('./utils/errors');
 
 const { PORT = 3000 } = process.env;
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 // подключаем роутинг
 app.use('/', userRouter);
-app.use('/', CardRouter);
+app.use('/', cardRouter);
 
 app.all('*/', (req, res) => {
   res.status(ERROR_CODE.NOT_FOUND).send({ message: 'Страница не существует' });
