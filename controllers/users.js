@@ -31,7 +31,6 @@ module.exports.createUser = (req, res) => {
 // Получаем пользователя по id
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .orFail(new Error('NotFound'))
     .then((user) => {
       if (user) {
         res.status(ERROR_CODE.OK).send({ data: user });
