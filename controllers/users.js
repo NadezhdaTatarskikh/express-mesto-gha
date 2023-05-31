@@ -56,7 +56,7 @@ module.exports.getUserById = (req, res) => {
 // Обновляем данные пользователя
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
-  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (user) {
         res.status(ERROR_CODE.OK).send(user);
@@ -85,7 +85,7 @@ module.exports.updateProfile = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (user) {
         res.status(ERROR_CODE.OK).send(user);
