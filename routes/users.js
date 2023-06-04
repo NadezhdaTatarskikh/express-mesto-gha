@@ -7,10 +7,16 @@ const {
   updateProfile,
 } = require('../controllers/users');
 
+const {
+  userIdValidate,
+  userInfoValidate,
+  userAvatarValidate,
+} = require('../middlewares/validation');
+
 router.get('/', getUsers); // возвращает всех пользователей
-router.get('/:userId', getUserById); // возвращает пользователя по _id
+router.get('/:userId', getUserById, userIdValidate); // возвращает пользователя по _id
 router.get('/', getCurrentUser); // создаёт пользователя
-router.patch('/me/avatar', updateAvatar); // обновляет аватар
-router.patch('/me', updateProfile); // обновляет профиль
+router.patch('/me/avatar', updateAvatar, userAvatarValidate); // обновляет аватар
+router.patch('/me', updateProfile, userInfoValidate); // обновляет профиль
 
 module.exports = router;

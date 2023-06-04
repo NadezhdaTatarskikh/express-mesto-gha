@@ -7,7 +7,7 @@ const cardRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const { signinValidate, signupValidate } = require('./middlewares/validation');
-const router = require('./routes');
+const NotFound = require('./utils/errors/NotFound');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -26,17 +26,23 @@ app.post('/signup', signupValidate, createUser);
 app.use(auth);
 // подключаем роутинг
 app.use('/users', userRouter);
-app.use('/users', cardRouter);
+app.use('/card', cardRouter);
 
-app.use(router);
+app.all('*/', (req, res, next) => {
+  next(new NotFound('Страница не существует'));
+});
 
 // обработчики ошибок
 app.use(errors());
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
-  });
+  const {
+    statusCode = 500,
+    message,
+  } = err;
+  res.status(statusCode)
+    .send({
+      message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
+    });
   next();
 });
 
