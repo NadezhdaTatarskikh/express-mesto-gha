@@ -6,7 +6,7 @@ const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
-const { signinValidate, signupValidate } = require('./middlewares/validation');
+const { signinValidade, signupValidate } = require('./middlewares/validation');
 const NotFound = require('./utils/errors/NotFound');
 
 const { PORT = 3000 } = process.env;
@@ -22,7 +22,7 @@ mongoose.connect('mongodb://127.0.0.1/mestodb')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/signin', signinValidate, login);
+app.post('/signin', signinValidade, login);
 app.post('/signup', signupValidate, createUser);
 
 // подключаем роутинг

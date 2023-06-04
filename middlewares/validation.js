@@ -34,14 +34,14 @@ module.exports.cardIdValidate = celebrate({
   }),
 });
 
-module.exports.singinValidate = celebrate({
+module.exports.signinValidade = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(6),
   }),
 });
 
-module.exports.singupValidate = celebrate({
+module.exports.signupValidate = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
