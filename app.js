@@ -12,9 +12,11 @@ const NotFound = require('./utils/errors/NotFound');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1/mestodb');
-
-mongoose.set({ runValidators: true });
+mongoose.connect('mongodb://127.0.0.1/mestodb')
+  // eslint-disable-next-line no-console
+  .then(() => console.log('База данных подключена'))
+  // eslint-disable-next-line no-console
+  .catch((err) => console.log('Ошибка подключения к БД', err));
 
 // подключаем парсеры
 app.use(express.json());
@@ -23,17 +25,18 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/signin', signinValidate, login);
 app.post('/signup', signupValidate, createUser);
 
-app.use(auth);
 // подключаем роутинг
-app.use('/users', userRouter);
-app.use('/card', cardRouter);
+app.use('/users', auth, userRouter);
+app.use('/card', auth, cardRouter);
 
+// Обработка запроса на несуществующий роут
 app.all('*/', (req, res, next) => {
   next(new NotFound('Страница не существует'));
 });
 
-// обработчики ошибок
+// обработчик ошибок celebrate
 app.use(errors());
+
 app.use((err, req, res, next) => {
   const {
     statusCode = 500,

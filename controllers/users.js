@@ -6,16 +6,10 @@ const BadRequestError = require('../utils/errors/BadRequestError');
 const NotFound = require('../utils/errors/NotFound');
 const ConflictError = require('../utils/errors/ConflictError');
 
-module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
-  User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
-        expiresIn: '7d',
-      });
-      // вернём токен
-      res.send({ _id: token });
-    })
+// Получаем всех пользователей
+module.exports.getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.send({ data: users }))
     .catch(next);
 };
 
@@ -36,12 +30,11 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hast,
     }))
-    .then((user) => res.status(ERROR_CODE.CREATED).send({
-      _id: user._id,
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      email: user.email,
+    .then(() => res.status(ERROR_CODE.CREATED).send({
+      name,
+      about,
+      avatar,
+      email,
     }))
     // данные не записались, вернём ошибку
     .catch((err) => {
@@ -57,10 +50,16 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-// Получаем всех пользователей
-module.exports.getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.send({ data: users }))
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        expiresIn: '7d',
+      });
+      // вернём токен
+      res.send({ _id: token });
+    })
     .catch(next);
 };
 

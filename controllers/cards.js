@@ -13,8 +13,6 @@ module.exports.getCards = (req, res, next) => {
 
 // Создаем карточку по id
 module.exports.createCard = (req, res, next) => {
-  // eslint-disable-next-line no-console
-  console.log(req.user._id);
   const { name, link } = req.body;
   const owner = req.user._id;
   return Card.create({ name, link, owner })

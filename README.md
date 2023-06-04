@@ -31,7 +31,7 @@ Back-end для проекта Mesto.
 
 [Ссылка на проект](https://github.com/NadezhdaTatarskikh/express-mesto-gha.git)
 
-[Чек лист]( https://code.s3.yandex.net/web-developer/checklists-pdf/new-program/checklist_13.pdf)
+[Чек лист](https://code.s3.yandex.net/web-developer/checklists-pdf/new-program/checklist_14.pdf)
 
 ## Запуск проекта
 
