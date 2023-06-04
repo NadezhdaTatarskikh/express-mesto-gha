@@ -34,10 +34,12 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(() => {
-      throw new NotFound('Карточка с указанным _id не найдена');
+    .then((card) => {
+      if (!card) {
+        throw new NotFound('Карточка не найдена');
+      }
+      res.status(ERROR_CODE.OK).send({ data: card });
     })
-    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Введены некорректные данные'));
@@ -75,10 +77,12 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(() => {
-      throw new NotFound('Карточка не найдена');
+    .then((card) => {
+      if (!card) {
+        throw new NotFound('Карточка не найдена');
+      }
+      res.status(ERROR_CODE.OK).send({ data: card });
     })
-    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Введены некорректные данные'));
