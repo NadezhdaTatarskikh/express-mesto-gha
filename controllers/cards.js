@@ -29,22 +29,20 @@ module.exports.createCard = (req, res, next) => {
 
 // Удаляем карточку
 module.exports.deleteCard = (req, res, next) => {
-  const { cardId } = req.params;
-  const { _id } = req.user;
-  Card.findById(cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFound('Карточка не найдена');
       }
-      if (card.owner.toString() !== _id) {
+      if (card.owner.toString() !== req.user_id) {
         throw new ForbiddenError('Нет прав на удаление чужой картчоки');
       }
-      Card.findByIdAndRemove(cardId)
+      Card.findByIdAndRemove(req.params.cardId)
         .then(() => res.send({ message: 'Карточка удалена' }))
         .catch(next);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'CastError') {
         return next(new BadRequestError('Введены некорректные данные'));
       }
       return next(err);
