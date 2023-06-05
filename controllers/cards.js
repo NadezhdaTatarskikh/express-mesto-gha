@@ -29,15 +29,17 @@ module.exports.createCard = (req, res, next) => {
 
 // Удаляем карточку
 module.exports.deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
+  const { cardId } = req.params;
+  const { _id } = req.user;
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFound('Карточка не найдена');
       }
-      if (card.owner.toString() !== req.params) {
+      if (card.owner.toString() !== _id) {
         throw new ForbiddenError('Нет прав на удаление чужой картчоки');
       }
-      Card.findByIdAndRemove(req.params.cardId)
+      Card.findByIdAndRemove(cardId)
         .then(() => res.send({ message: 'Карточка удалена' }))
         .catch(next);
     })
@@ -56,7 +58,6 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
         return next(new NotFound('Карточка не найдена'));
