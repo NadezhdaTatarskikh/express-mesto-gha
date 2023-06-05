@@ -58,6 +58,7 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
         return next(new NotFound('Карточка не найдена'));
