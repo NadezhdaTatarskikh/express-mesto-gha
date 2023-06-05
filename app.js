@@ -22,8 +22,8 @@ app.post('/signin', signinValidade, login);
 app.post('/signup', signupValidate, createUser);
 
 // подключаем роутинг
-app.use('/users', auth, userRouter);
-app.use('/card', auth, cardRouter);
+app.use('/', auth, userRouter);
+app.use('/', auth, cardRouter);
 
 // Обработка запроса на несуществующий роут
 app.all('*/', (req, res, next) => {
