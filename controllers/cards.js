@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFound('Карточка не найдена');
       }
-      if (card.owner.toString() !== req.user._id) {
+      if (card.owner.toString() !== req.user) {
         throw new ForbiddenError('Нет прав на удаление чужой картчоки');
       }
       Card.findByIdAndRemove(req.params.cardId)
@@ -56,9 +56,10 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
-        throw new NotFound('Карточка не найдена');
+        return next(new NotFound('Карточка не найдена'));
       }
       res.status(ERROR_CODE.OK).send({ data: card });
     })
