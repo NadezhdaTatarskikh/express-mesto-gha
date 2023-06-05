@@ -37,13 +37,18 @@ module.exports.deleteCard = (req, res, next) => {
         throw new NotFound('Карточка не найдена');
       }
       if (card.owner.valueOf() !== _id) {
-        throw new ForbiddenError('Вы не можете удалить чужую карточку');
+        throw new ForbiddenError('Нет прав на удаление чужой картчоки');
       }
       Card.findByIdAndRemove(cardId)
-        .then((deletedCard) => res.status(ERROR_CODE.OK).send(deletedCard))
+        .then(() => res.send({ message: 'Карточка удалена' }))
         .catch(next);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return next(new BadRequestError('Введены некорректные данные'));
+      }
+      return next(err);
+    });
 };
 
 // Ставим лайк карточке
