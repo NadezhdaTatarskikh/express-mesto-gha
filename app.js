@@ -12,13 +12,7 @@ const NotFound = require('./utils/errors/NotFound');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1/mestodb')
-  // eslint-disable-next-line no-console
-  .then(() => console.log('База данных подключена'))
-  // eslint-disable-next-line no-console
-  .catch((err) => console.log('Ошибка подключения к БД', err));
-
-mongoose.set({ runValidators: true });
+mongoose.connect('mongodb://127.0.0.1/mestodb');
 
 // подключаем парсеры
 app.use(express.json());
