@@ -66,20 +66,30 @@ module.exports.login = (req, res, next) => {
 // Создаем нового пользователя
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() => {
-      throw new NotFound('Пользователь по указанному _id не найден');
+    .then((user) => {
+      if (user) {
+        res.status(ERROR_CODE.OK).send({ data: user });
+      } else {
+        throw new NotFound('Пользователь по указанному _id не найден');
+      }
     })
-    .then((user) => res.send({ data: user }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Введены некорректные данные поиска'));
+      }
+      return next(err);
+    });
 };
 
 // Получаем пользователя по id
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(() => {
-      throw new NotFound('Пользователь по указанному _id не найден');
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Пользователь не найден');
+      }
+      res.status(ERROR_CODE.OK).send({ data: user });
     })
-    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Введены некорректные данные'));
@@ -96,11 +106,11 @@ module.exports.updateProfile = (req, res, next) => {
     { name, about },
     { new: true, runValidators: true },
   )
-    .orFail(() => {
-      throw new NotFound('Пользователь по указанному _id не найден');
-    })
     .then((user) => {
-      res.send({ data: user });
+      if (!user) {
+        throw new NotFound('Пользователь не найден');
+      }
+      res.status(ERROR_CODE.OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -123,11 +133,11 @@ module.exports.updateAvatar = (req, res, next) => {
     { avatar },
     { new: true, runValidators: true },
   )
-    .orFail(() => {
-      throw new NotFound('Пользователь по указанному _id не найден');
-    })
     .then((user) => {
-      res.send({ data: user });
+      if (!user) {
+        throw new NotFound('Пользователь не найден');
+      }
+      res.status(ERROR_CODE.OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

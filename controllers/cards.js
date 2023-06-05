@@ -17,10 +17,32 @@ module.exports.createCard = (req, res, next) => {
   const owner = req.user._id;
   return Card.create({ name, link, owner })
     .then((card) => {
-      res.status(ERROR_CODE.CREATED).send({ data: card });
+      res.status(ERROR_CODE.CREATED).send({ card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
+        return next(new BadRequestError('Введены некорректные данные'));
+      }
+      return next(err);
+    });
+};
+
+// Удаляем карточку
+module.exports.deleteCard = (req, res, next) => {
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFound('Карточка не найдена');
+      }
+      if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError('Нет прав на удаление чужой картчоки');
+      }
+      Card.findByIdAndRemove(req.params.cardId)
+        .then(() => res.send({ message: 'Карточка удалена' }))
+        .catch(next);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         return next(new BadRequestError('Введены некорректные данные'));
       }
       return next(err);
@@ -42,28 +64,6 @@ module.exports.likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestError('Введены некорректные данные'));
-      }
-      return next(err);
-    });
-};
-
-// Удаляем карточку
-module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        throw new NotFound('Карточка не найдена');
-      }
-      if (card.owner.toString() !== req.user._id) {
-        throw new ForbiddenError('Нет прав на удаление чужой картчоки');
-      }
-      Card.findByIdAndRemove(req.params.cardId)
-        .then(() => res.send({ message: 'Карточка удалена' }))
-        .catch(next);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
         return next(new BadRequestError('Введены некорректные данные'));
       }
       return next(err);
