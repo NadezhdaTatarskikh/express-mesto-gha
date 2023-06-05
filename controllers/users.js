@@ -22,13 +22,13 @@ module.exports.createUser = (req, res, next) => {
     password,
   } = req.body;
   bcrypt
-    .hast(password, 10)
-    .then((hast) => User.create({
+    .hash(password, 10)
+    .then((hash) => User.create({
       name,
       about,
       avatar,
       email,
-      password: hast,
+      password: hash,
     }))
     .then(() => res.status(ERROR_CODE.CREATED).send({
       name,
@@ -38,10 +38,10 @@ module.exports.createUser = (req, res, next) => {
     }))
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.code === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         return next(new BadRequestError('Введены некорректные данные'));
       }
-      if (err.code === 11000) {
+      if (err.name === 11000) {
         return next(
           new ConflictError('Пользователь с такой почтой уже существует'),
         );
