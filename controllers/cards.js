@@ -40,7 +40,7 @@ module.exports.deleteCard = (req, res, next) => {
         throw new ForbiddenError('Нет прав на удаление чужой картчоки');
       }
       Card.findByIdAndRemove(cardId)
-        .then(() => res.send({ message: 'Карточка удалена' }))
+        .then((deletedCard) => res.status(200).send(deletedCard))
         .catch(next);
     })
     .catch((err) => {
